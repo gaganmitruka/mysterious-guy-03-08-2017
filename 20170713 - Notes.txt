@@ -1,0 +1,147 @@
+PS File consisting Employee Records sorted in Ascending Order of Employee ID
+
+USERID.VSAM.EMPFILE
+
+Using IDCAMS you will Define a VSAM KSDS Base Cluster
+
+USERID.VSAM.EMPMAST		- Base Cluster
+USERID.VSAM.EMPMAST.DATA	- Data Component
+USERID.VSAM.EMPMAST.INDEX	- Index Component
+=============================================================
+JCL to Define an ESDS Dataset
+//USERIDV JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), 
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID  
+//STEP010  EXEC PGM=IDCAMS                       
+//SYSPRINT DD SYSOUT=*                           
+//SYSIN    DD *                                  
+ /* IDCAMS COMMAND */
+ DELETE DSRP001.VSAM.ESDS CLUSTER PURGE
+ SET MAXCC=0
+ DEFINE CLUSTER (NAME(USERID.VSAM.ESDS) -       
+        TRACKS(1 1) -
+        RECORDSIZE(50 50) -                            
+        NONINDEXED -                             
+        ) -                                      
+        DATA (NAME(USERID.VSAM.ESDS.DATA) -     
+        )                                        
+/*
+=============================================================
+JCL to Load Data into an ESDS Dataset
+//DSRP001V JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001    
+//STEP010  EXEC PGM=IDCAMS                      
+//SYSPRINT DD SYSOUT=*                          
+//PSFILE   DD DSN=DSRP001.VSAM.EMPLOYEE,DISP=SHR
+//ESDSFILE DD DSN=DSRP001.VSAM.ESDS,DISP=SHR    
+//SYSIN    DD *                                 
+ REPRO INFILE(PSFILE) -                         
+      OUTFILE(ESDSFILE)                         
+/*
++++++++++++++++++++++++
+Combined JCL to Delete, Define & Load to ESDS
+//STEP010  EXEC PGM=IDCAMS                      
+//PSFILE   DD DSN=DSRP001.VSAM.EMPLOYEE,DISP=SHR
+//ESDSFILE DD DSN=DSRP001.VSAM.ESDS,DISP=SHR    
+//SYSPRINT DD SYSOUT=*                          
+//SYSIN    DD *                             
+ /* IDCAMS COMMAND */                       
+ DELETE DSRP001.VSAM.ESDS CLUSTER PURGE     
+ SET MAXCC=0                                
+ DEFINE CLUSTER (NAME(DSRP001.VSAM.ESDS) -  
+        TRACKS(1 1) -                       
+        RECORDSIZE(50 50) -                 
+        NONINDEXED -                        
+        ) -                                 
+        DATA (NAME(DSRP001.VSAM.ESDS.DATA) -
+        )                                   
+ REPRO INFILE(PSFILE) -                     
+      OUTFILE(ESDSFILE)                     
+/*
+=============================================
+JCL to Define a VSAM KSDS File
+//DSRP001V JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), 
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001     
+//STEP010  EXEC PGM=IDCAMS                       
+//SYSPRINT DD SYSOUT=*                           
+//SYSIN    DD *                                  
+ /* IDCAMS COMMAND */                            
+ DELETE DSRP001.VSAM.KSDS CLUSTER PURGE          
+ SET MAXCC=0                                     
+ DEFINE CLUSTER (NAME(DSRP001.VSAM.KSDS) -       
+        TRACKS(1 1) -                            
+        KEYS(5 0) -                              
+        RECORDSIZE(50 50) -                      
+        INDEXED -                                
+        ) -                                      
+        DATA (NAME(DSRP001.VSAM.KSDS.DATA) -     
+        ) -                                      
+        INDEX (NAME(DSRP001.VSAM.KSDS.INDEX) -   
+        )                                        
+/*
+=========
+JCL to Sort Input File, eliminates duplicates & Load to KSDS
+//DSRP001V JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), 
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001     
+//STEP010  EXEC PGM=SORT                         
+//SYSOUT   DD SYSOUT=*                           
+//SORTIN   DD DSN=DSRP001.VSAM.EMPLOYEE,DISP=SHR 
+//SORTOUT  DD DSN=&&TEMP,DISP=(NEW,PASS),
+//            SPACE=(TRK,(1,1),RLSE),            
+//            DCB=(RECFM=FB,LRECL=50,BLKSIZE=5000
+//SYSIN    DD *                                  
+  SORT FIELDS=(1,5,CH,A)                         
+  SUM FIELDS=NONE                                
+/*                                               
+//STEP020  EXEC PGM=IDCAMS                       
+//SYSPRINT DD SYSOUT=*                           
+//PSFILE   DD DSN=&&TEMP,DISP=OLD                
+//KSDSFILE DD DSN=DSRP001.VSAM.KSDS,DISP=SHR     
+//SYSIN    DD *                                  
+ REPRO INFILE(PSFILE) -                          
+      OUTFILE(KSDSFILE) -
+      REPLACE
+++++++++++++++++
+// SET INP=DSRP001.VSAM.EMPLOYEE.EVEN 
+//STEP010  EXEC PGM=SORT              
+//SYSOUT   DD SYSOUT=*                
+//SORTIN   DD DSN=&INP,DISP=SHR        
+//SORTOUT  DD DSN=&&TEMP,DISP=(NEW,PASS,PASS),
+=================================================
+1) Define a KSDS with REUSE option
+
+2) Load All Odd Records - REPRO
+	11 33 55 77
+
+3) Load All Even Records - REPRO with REUSE
+	22 44 66 88
+========
+1) Define a KSDS with REUSE option
+
+2) Load All Odd Records - REPRO
+	11 33 55 77
+
+3) Load All Even Records - REPRO with REPLACE
+	11 22 33 44 55 66 77 88
+======================================================
+JCL to Download Data from an ESDS to PS File
+//DSRP001V JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                              
+//SYSPRINT DD SYSOUT=*                                  
+//PSFILE   DD DSN=DSRP001.VSAM.EMPLOYEE.OUTPUT,DISP=OLD 
+//ESDSFILE DD DSN=DSRP001.VSAM.ESDS,DISP=SHR            
+//SYSIN    DD *                                         
+ REPRO INFILE(ESDSFILE) -                               
+      OUTFILE(PSFILE)                                             +++++++++
+JCL to Download Data from ESDS to PS using SKIP and COUNT
+//DSRP001V JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                              
+//SYSPRINT DD SYSOUT=*                                  
+//PSFILE   DD DSN=DSRP001.VSAM.EMPLOYEE.OUTPUT,DISP=OLD 
+//ESDSFILE DD DSN=DSRP001.VSAM.ESDS,DISP=SHR            
+//SYSIN    DD *                                         
+ REPRO INFILE(ESDSFILE) -                               
+      OUTFILE(PSFILE) -                                 
+      SKIP(2) -                                         
+      COUNT(6)                                          
+=========================================================
+JCL to Download Data from KSDS to PS = Same as Above 2 JCLs

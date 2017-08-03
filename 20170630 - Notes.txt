@@ -1,0 +1,115 @@
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.SORTOUT,                    
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//STEP020  EXEC PGM=SORT                                   
+//SORTIN   DD DSN=DSRP001.TEST.SORTIN,DISP=OLD             
+//SORTOUT  DD DSN=DSRP001.TEST.SORTOUT,                    
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//SORTWK01 DD SPACE=(CYL,(1,1),RLSE),UNIT=SYSDA            
+//SYSOUT   DD SYSOUT=*                                     
+//SYSIN    DD *                                            
+  SORT FIELDS=(6,3,CH,A)
+/*
+===========================================================
+  SORT FIELDS=(6,3,CH,A,26,4,CH,D)
+  SORT FIELDS=(6,3,A,26,4,D),FORMAT=CH
+----+----1----+----2----+----
+asv  111 - this is line -1aaa
+asv  444 - this is line -4aaa
+asv  333 - this is line -3aaa
+asv  222 - this is line -2aaa
+asv  555 - this is line -5aaa
+asv  111 - this is line -1bbb
+asv  444 - this is line -4bbb
+asv  333 - this is line -3bbb
+asv  222 - this is line -2bbb
+asv  555 - this is line -5bbb
++++++++++++++++++++++++++++++
+asv  111 - this is line -1bbb 
+asv  111 - this is line -1aaa 
+asv  222 - this is line -2bbb 
+asv  222 - this is line -2aaa 
+asv  333 - this is line -3bbb 
+asv  333 - this is line -3aaa 
+asv  444 - this is line -4bbb 
+asv  444 - this is line -4aaa 
+asv  555 - this is line -5bbb 
+asv  555 - this is line -5aaa 
++++++++++++++++++++++++++++++
+ ----+----1----+----2----+
+ PUNE     NAME - 111 12E  
+ MUMBAI   NAME - 222 25F  
+ PUNE     NAME - 111 32L  
+ MUMBAI   NAME - 222 25O  
+============================
+ ----+----1----+----2----+
+ MUMBAI   NAME - 222 00{  
+ PUNE     NAME - 111 19Q  
+++++++++++++++++++++++++++
+//SYSIN    DD *          
+  SORT FIELDS=(1,9,CH,A) 
+  SUM FIELDS=(21,3,ZD)   
+/*
+=================================
+----+----1----+----2----+
+PUNE     NAME - 111012E  
+MUMBAI   NAME - 222025F  
+PUNE     NAME - 111032L  
+MUMBAI   NAME - 222025O  
+CHENNAI  NAME - 111086B  
+KOLKATA  NAME - 222075O  
+KOLKATA  NAME - 111095O  
+CHENNAI  NAME - 222018A  
+=======================
+----+----1----+----2----+
+CHENNAI  NAME - 111104C  
+KOLKATA  NAME - 222171K  
+MUMBAI   NAME - 222000{  
+PUNE     NAME - 111019Q  
+++++++++++++++++++++++++++
+//SYSIN    DD *          
+  SORT FIELDS=(1,9,CH,A) 
+  SUM FIELDS=(20,4,ZD)   
+/*
+===========================
+//SYSIN    DD *                    
+  SORT FIELDS=(1,5,CH,A)           
+  OMIT COND=(21,3,CH,EQ,C'PUN')    
+/*                                 
+  INCLUDE COND=(21,3,CH,EQ,C'PUN', 
+            AND,32,5,CH,EQ,C'M/F') 
+===================================
+----+----1----+----2----+----3----+----4----+----5
+11111EMP NAME - 111 PUN19900101M/F  10101010101010
+22222EMP NAME - 222 MUM19900202TEST 20202020202020
+
+//SYSIN DD *
+   SORT FIELDS=(1,5,CH,A)
+   INREC FIELDS=(1:1,5,6:21,3,9:6,15,24:24,27)
+/*
+----+----1----+----2----+----3----+----4----+----5
+10101PUNEMP NAME - 101 19900101M/F  10101010101010
+11111PUNEMP NAME - 111 19900101M/F  10101010101010
+++++++++++++++++
+//SYSIN DD *
+   SORT FIELDS=(1,5,CH,A)
+   OUTREC FIELDS=(1:32,5,6:1,31,37:37,14)
+/*
+===================================
+----+----1----+----2----+----3----+----4----+----5
+11111EMP NAME - 111 PUN19900101M/F  10101010101010
+22222EMP NAME - 222 MUM19900202TEST 20202020202020
+++++++++++++++++
+//SYSIN DD *
+   SORT FIELDS=(1,5,CH,A)
+   OUTREC FIELDS=(1:32,5,2X,8:1,5,2X,15:6,15,2X,32:21,3,2X,
+		37:24,8)
+/*

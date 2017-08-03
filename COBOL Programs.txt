@@ -1,0 +1,192 @@
+VMEMBER NAME  PROG01
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG01.                                              00020000
+V000300 PROCEDURE DIVISION.                                              00030000
+V000400     DISPLAY '==========='                                        00040000
+V000500     DISPLAY 'HELLO WORLD'                                        00050000
+V000600     DISPLAY '==========='                                        00060000
+V000700     DISPLAY 'CAP GEMINI!' ' ' 'WELCOME TO MAINFRAME WORLD'       00070000
+V000800     DISPLAY '==========='                                        00080000
+V000900     DISPLAY 777                                                  00090000
+V001000     DISPLAY '==========='                                        00100000
+V001100     STOP RUN.                                                    00110000
+VMEMBER NAME  PROG02
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG02.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-INPUT1          PIC X(10).                                00050000
+V000600 77  WS-INPUT1          PIC X(10).                                00060000
+V000700 PROCEDURE DIVISION.                                              00070000
+V000800     ACCEPT WS-INPUT                                              00080000
+V000900     DISPLAY '==========='                                        00090000
+V001000     DISPLAY WS-INPUT                                             00100000
+V001100     DISPLAY '==========='                                        00110000
+V001200     STOP RUN.                                                    00120000
+VMEMBER NAME  PROG03
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG03.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-INPUTS.                                                   00050000
+V000600     03  WS-INPUT1      PIC X(10).                                00060000
+V000700     03  WS-INPUT2      PIC X(10).                                00070000
+V000800 PROCEDURE DIVISION.                                              00080000
+V000900     ACCEPT WS-INPUTS                                             00090000
+V001000     DISPLAY '==========='                                        00100000
+V001100     DISPLAY WS-INPUTS                                            00110000
+V001200     DISPLAY '==========='                                        00120000
+V001300     DISPLAY WS-INPUT1                                            00130000
+V001400     DISPLAY '==========='                                        00140000
+V001500     DISPLAY WS-INPUT2                                            00150000
+V001600     DISPLAY '==========='                                        00160000
+V001700     DISPLAY WS-INPUT2, ' ', WS-INPUT1                            00170000
+V001800     DISPLAY '==========='                                        00180000
+V001900     STOP RUN.                                                    00190000
+VMEMBER NAME  PROG04
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG04.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-DATE-6          PIC 9(06).                                00050000
+V000600 01  WS-DATE-8          PIC 9(08).                                00060000
+V000700 01  WS-TIME            PIC 9(08).                                00070000
+V000800 PROCEDURE DIVISION.                                              00080000
+V000900     ACCEPT WS-DATE-6 FROM DATE                                   00090000
+V001000     ACCEPT WS-DATE-8 FROM DATE YYYYMMDD                          00100000
+V001100     ACCEPT WS-TIME   FROM TIME                                   00110000
+V001200     DISPLAY '==========='                                        00120000
+V001300     DISPLAY 'CURRENT DATE1 ', WS-DATE-6                          00130000
+V001400     DISPLAY '==========='                                        00140000
+V001500     DISPLAY 'CURRENT DATE2 ', WS-DATE-8                          00150000
+V001600     DISPLAY '==========='                                        00160000
+V001700     DISPLAY 'CURRENT TIME  ', WS-TIME                            00170000
+V001800     DISPLAY '==========='                                        00180000
+V001900     STOP RUN.                                                    00190000
+VMEMBER NAME  PROG05
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG05.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-INPUTS.                                                   00050000
+V000600     03  WS-INPUT1      PIC X(05).                                00060000
+V000700     03  WS-INPUT2      PIC X(10).                                00070000
+V000800 01  WS-OUTPUT1.                                                  00080000
+V000900     03  WS-OUT11       PIC X(10).                                00090000
+V001000     03  WS-OUT12       PIC X(05).                                00100000
+V001100 01  WS-OUTPUT2.                                                  00110000
+V001200     03  WS-OUT21       PIC X(05).                                00120000
+V001300     03  WS-OUT22       PIC X(10).                                00130000
+V001400 PROCEDURE DIVISION.                                              00140000
+V001500     ACCEPT WS-INPUTS                                             00150000
+V001600     MOVE WS-INPUT1 TO WS-OUT11, WS-OUT21                         00160000
+V001700     MOVE WS-INPUT2 TO WS-OUT12, WS-OUT22                         00170000
+V001800     DISPLAY '==========='                                        00180000
+V001900     DISPLAY 'INPUT ', WS-INPUT1, ' - ', WS-INPUT2                00190000
+V002000     DISPLAY '==========='                                        00200000
+V002100     DISPLAY 'OUTPUT1 ', WS-OUT11, ' - ', WS-OUT12                00210000
+V002200     DISPLAY '==========='                                        00220000
+V002300     DISPLAY 'OUTPUT2 ', WS-OUT21, ' - ', WS-OUT22                00230000
+V002400     DISPLAY '==========='                                        00240000
+V002500     MOVE SPACES TO WS-OUTPUT1                                    00250000
+V002600     MOVE WS-INPUTS TO WS-OUTPUT1                                 00260000
+V002700     DISPLAY '==========='                                        00270000
+V002800     DISPLAY 'OUTPUT1 ', WS-OUTPUT1                               00280000
+V002900     DISPLAY '==========='                                        00290000
+V003000     STOP RUN.                                                    00300000
+VMEMBER NAME  PROG06
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG06.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-INPUTS.                                                   00050001
+V000600     03  WS-A           PIC 9(02).                                00060000
+V000700     03  WS-B           PIC 9(02).                                00070000
+V000800 01  WS-OUTPUTS.                                                  00080001
+V000900     03  WS-C           PIC 9(03)    VALUE ZERO.                  00090003
+V001000     03  WS-D           PIC S9(02)   VALUE ZERO.                  00100003
+V001100     03  WS-E           PIC 9(03)    VALUE ZERO.                  00110003
+V001200     03  WS-F           PIC 9(02)V99 VALUE ZERO.                  00120003
+V001300 01  WS-DISPLAY.                                                  00130001
+V001400     03  WS-C-O         PIC ZZ9.                                  00140002
+V001500     03  WS-D-O         PIC -9(02).                               00150002
+V001600     03  WS-E-O         PIC $Z,ZZ9.                               00160002
+V001700     03  WS-F-O         PIC 9(02).99.                             00170002
+V001800 PROCEDURE DIVISION.                                              00180000
+V001900     ACCEPT WS-A                                                  00190000
+V002000     ACCEPT WS-B                                                  00200000
+V002100     INITIALIZE WS-DISPLAY                                        00210003
+V002200     DISPLAY '==========='                                        00220000
+V002300     ADD WS-A TO WS-B GIVING WS-C                                 00230000
+V002400     MOVE WS-C TO WS-C-O                                          00240002
+V002500     DISPLAY 'ADD  ', WS-C-O                                      00250002
+V002600     SUBTRACT WS-A FROM WS-B GIVING WS-D                          00260000
+V002700     MOVE WS-D TO WS-D-O                                          00270001
+V002800     DISPLAY 'SUB  ', WS-D-O                                      00280001
+V002900     MULTIPLY WS-A BY WS-B GIVING WS-E                            00290000
+V003000       ON SIZE ERROR                                              00300003
+V003100          DISPLAY 'SIZE ERROR ON MULTIPLICATION'.                 00310003
+V003200     MOVE WS-E TO WS-E-O                                          00320002
+V003300     DISPLAY 'MULT ', WS-E-O                                      00330002
+V003400     DIVIDE WS-A BY WS-B GIVING WS-F                              00340000
+V003500     MOVE WS-F TO WS-F-O                                          00350001
+V003600     DISPLAY 'DIV  ', WS-F-O                                      00360001
+V003700     DISPLAY '==========='                                        00370000
+V003800     STOP RUN.                                                    00380000
+VMEMBER NAME  PROG07
+V000100 IDENTIFICATION DIVISION.                                         00010000
+V000200 PROGRAM-ID. PROG07.                                              00020000
+V000300 DATA DIVISION.                                                   00030000
+V000400 WORKING-STORAGE SECTION.                                         00040000
+V000500 01  WS-INPUTS.                                                   00050000
+V000600     03  WS-A           PIC 9(02).                                00060000
+V000700     03  WS-B           PIC 9(02).                                00070000
+V000800 01  WS-OUTPUTS.                                                  00080000
+V000900     03  WS-C           PIC 9(03)    VALUE ZERO.                  00090000
+V001000     03  WS-D           PIC S9(02)   VALUE ZERO.                  00100000
+V001100     03  WS-E           PIC 9(04)    VALUE ZERO.                  00110000
+V001200     03  WS-F           PIC 9(02)V99 VALUE ZERO.                  00120000
+V001300 01  WS-DISPLAY.                                                  00130000
+V001400     03  WS-C-O         PIC ZZ9.                                  00140000
+V001500     03  WS-D-O         PIC -9(02).                               00150000
+V001600     03  WS-E-O         PIC $Z,ZZ9.                               00160000
+V001700     03  WS-F-O         PIC 9(02).99.                             00170000
+V001800 PROCEDURE DIVISION.                                              00180000
+V001900     ACCEPT WS-A                                                  00190000
+V002000     ACCEPT WS-B                                                  00200000
+V002100*    IF WS-A IS NUMERIC AND WS-B IS NUMERIC                       00210000
+V002200     IF WS-A IS NOT NUMERIC OR WS-B IS NOT NUMERIC                00220000
+V002300        DISPLAY 'INPUTS ARE NOT NUMERIC'                          00230000
+V002400        STOP RUN                                                  00240000
+V002500     ELSE                                                         00250000
+V002600*                                                                 00260000
+V002700     INITIALIZE WS-DISPLAY                                        00270000
+V002800     DISPLAY '==========='                                        00280000
+V002900     ADD WS-A TO WS-B GIVING WS-C                                 00290000
+V003000     MOVE WS-C TO WS-C-O                                          00300000
+V003100     DISPLAY 'ADD  ', WS-C-O                                      00310000
+V003200     SUBTRACT WS-A FROM WS-B GIVING WS-D                          00320000
+V003300     MOVE WS-D TO WS-D-O                                          00330000
+V003400     DISPLAY 'SUB  ', WS-D-O                                      00340000
+V003500     MULTIPLY WS-A BY WS-B GIVING WS-E                            00350000
+V003600     MOVE WS-E TO WS-E-O                                          00360000
+V003700     DISPLAY 'MULT ', WS-E-O                                      00370000
+V003800*                                                                 00380000
+V003900     IF WS-B = ZERO                                               00390000
+V004000        DISPLAY 'ZERO DIVIDE NOT POSSIBLE - ZERO CHECK'           00400000
+V004100     ELSE                                                         00410000
+V004200        DIVIDE WS-A BY WS-B GIVING WS-F                           00420000
+V004300        MOVE WS-F TO WS-F-O                                       00430000
+V004400        DISPLAY 'DIV  ', WS-F-O                                   00440000
+V004500     END-IF.                                                      00450000
+V004600*                                                                 00460000
+V004700     IF WS-B IS POSITIVE                                          00470000
+V004800        DIVIDE WS-A BY WS-B GIVING WS-F                           00480000
+V004900        MOVE WS-F TO WS-F-O                                       00490000
+V005000        DISPLAY 'DIV  ', WS-F-O                                   00500000
+V005100     ELSE                                                         00510000
+V005200        DISPLAY 'ZERO DIVIDE NOT POSSIBLE - POSITIVE CHECK'       00520000
+V005300     END-IF.                                                      00530000
+V005400*                                                                 00540000
+V005500     DISPLAY '==========='                                        00550000
+V005600     STOP RUN.                                                    00560000

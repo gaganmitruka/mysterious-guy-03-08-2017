@@ -1,0 +1,108 @@
+Control Break on Location & within that on Technology
+
+PROCEDURE DIVISION.
+MAIN-PARA.
+    PERFORM INIT-PARA
+    PERFORM PROCESS-PARA  UNTIL  END-OF-FILE
+    PERFORM END-PARA
+    STOP RUN.
+INIT-PARA.
+    SORT the Input Employee-File on Loc & Tech
+    Open the Files
+    Date Time Para
+    PERFORM READ-PARA
+    MOVE EMP-LOC	TO TEMP-LOC
+    MOVE EMP-TECH	TO TEMP-TECH.
+PROCESS-PARA.
+    IF EMP-LOC = TEMP-LOC
+       IF EMP-TECH = TEMP-TECH
+	  NEXT SENTENCE
+       ELSE
+	  PERFORM TECH-CHANGE-PARA
+       END-IF
+    ELSE
+       PERFORM TECH-CHANGE-PARA
+       PERFORM LOC-CHANGE-PARA
+    END-IF.
+    PERFORM PRINT-PARA.
+    PERFORM READ-PARA.
+PRINT-PARA.
+    Move Employee Details to DETAIL-LINE & Write it
+    Accumulate the Tech Totals (Loc Totals & Comp Totals)
+TECH-CHANGE-PARA.
+    Move Tech Totals to TOTAL-LINE & Write it.
+    Add Tech Totals to Loc Totals; Reset Tech Totals
+    MOVE EMP-TECH TO TEMP-TECH; MOVE 6 TO LINE-COUNT
+LOC-CHANGE-PARA.
+    Move Loc Totals to TOTAL-LINE & Write it.
+    Add Loc Totals to Company Totals; Reset Loc Totals
+    MOVE EMP-LOC TO TEMP-LOC.
+END-PARA.
+    PERFORM TECH-CHANGE-PARA
+    PERFORM LOC-CHANGE-PARA
+    Move Comp Totals to TOTAL-LINE & Write
+    Close the File.
+======================================================
+Control Break on Technology & within that on Location
+
+PROCEDURE DIVISION.
+MAIN-PARA.
+    PERFORM INIT-PARA
+    PERFORM PROCESS-PARA  UNTIL  END-OF-FILE
+    PERFORM END-PARA
+    STOP RUN.
+INIT-PARA.
+    SORT the Input Employee-File on Tech & Loc
+    Open the Files
+    Date Time Para
+    PERFORM READ-PARA
+    MOVE EMP-LOC	TO TEMP-LOC
+    MOVE EMP-TECH	TO TEMP-TECH.
+PROCESS-PARA.
+    IF EMP-TECH = TEMP-TECH
+       IF EMP-LOC = TEMP-LOC
+	  NEXT SENTENCE
+       ELSE
+	  PERFORM LOC-CHANGE-PARA
+       END-IF
+    ELSE
+       PERFORM LOC-CHANGE-PARA
+       PERFORM TECH-CHANGE-PARA
+    END-IF.
+    PERFORM PRINT-PARA.
+    PERFORM READ-PARA.
+PRINT-PARA.
+    Move Employee Details to DETAIL-LINE & Write it
+    Accumulate the Loc Totals
+LOC-CHANGE-PARA.
+    Move Loc Totals to TOTAL-LINE & Write it.
+    Add Loc Totals to Tech Totals; Reset Loc Totals
+    MOVE EMP-LOC TO TEMP-LOC; MOVE 5 TO LINE-COUNT.
+TECH-CHANGE-PARA.
+    Move Tech Totals to TOTAL-LINE & Write it.
+    Add Tech Totals to Comp Totals; Reset Tech Totals
+    MOVE EMP-TECH TO TEMP-TECH.
+END-PARA.
+    PERFORM LOC-CHANGE-PARA
+    PERFORM TECH-CHANGE-PARA
+    Move Comp Totals to TOTAL-LINE & Write
+    Close the File.
+======================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

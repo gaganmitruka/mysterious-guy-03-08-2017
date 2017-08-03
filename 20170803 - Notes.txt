@@ -1,0 +1,64 @@
+CECI SEND MAP(CALMAP) MAPSET(PnnAS01) ERASE
+
+CECI SET PROG(PnnAS01) NEWCOPY
+==============================
+If you make any Changes to your Screen Design
+1) Assemble the updated BMS Macro. Check that you get
+   a CC=0. You need to fix even CC=4 Errors.
+2) Do SET PROG NEWCOPY in the CICS Region
+3) Test the Changes using SEND MAP MAPSET
+=========================================
+1) Allocate a new PDS called USERID.CICS.SOURCE
+2) Upload PROG01.cbl to above PDS using TSO Option 6
+3) Rename Member = PnnAP01
+4) Change Program ID = PnnAP01
+5) Change both the COPY Statements as follows -
+   COPY PnnAS01.
+   COPY DFHAID.
+6) Change TRANSID to PnnA
+7) Change MAPSET to PnnAS01 in SEND & RECEIVE
+8) Delete the Comment Line = LENGTH(30)
+=============================================
+Make the following changes in CICSCOB in JCLLIB
+1) Change All DSRP042 to DSRPnnn
+2) Make changes in following Line Numbers -
+   05 - Change PROGNAME to PnnAP01
+   10 - SYSIN to USERID.CICS.SOURCE
+   26 - DD to USERID.CICS.COPYLIB
+=================================================
+Create the Following Menu Map -
+
+DATE: DD/MM/CCYY			TIME: HH:MM:SS
+
+		EMPLOYEE MAINTENANCE SYSTEM
+
+	1 - CALCULATOR PROGRAM
+
+	2 - EMPLOYEE INQUIRY
+
+	3 - EMPLOYEE MAINTENANCE
+
+	4 - EMPLOYEE BROWSE
+
+	X - ENTER OPTION TO EXECUTE PROGRAM
+
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENTER = PROCESS				PF3 = EXIT
+==================================================
+CECI ASKTIME ABSTIME(&VAL)
+
+CECI ABSTIME FORMATTIME DATE(&DATE) TIME(&TIME)
+	DATESEP TIMESEP
+
+
+
+
+
+
+
+
+
+
+

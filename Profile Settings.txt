@@ -1,0 +1,24 @@
+Profile Setting for COBOL Members -
+rec on
+caps on
+hi cob
+autonum on
+num on std cob
+prof lock
+res
+++++++++++++++
+Profile Setting for JCL Members -
+rec on
+caps on
+hi jcl
+num off
+prof lock
+res
+++++++++++++++
+Profile Setting for PS Files -
+rec on
+caps on
+num off
+prof lock
+res
+==================================

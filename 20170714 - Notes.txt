@@ -1,0 +1,199 @@
+VSAM - Virtual Storage Access Method. 4 types of VSAM Datasets
+ESDS - Entry Sequenced Datasets
+KSDS - Key Sequenced Datasets
+RRDS - Relative Record Datasets
+LDS  - Linear Datasets
+
+Data is stored in a Data Component. KSDS also has an Index Component which consists of Sequence Set as well as Index Set.
+
+Data in VSAM is stored in Control Intervals (CI) and Control 
+Areas (CA). One CI consists of Logical Records, FSPC (Freespace),
+US (Unused Space) and CF (Control Fields) consisting of RDF
+(Record Definition Field) & CIDF (Control Info Definition Field).
+
+We use IDCAMS to Delete, Define & Load Records into VSAM.
+
+We have written the following JCLs till yesterday evening
+1) ESDS - Delete & Define
+   RECORDSIZE, TRACKS and NONINDEXED are mandatory
+2) ESDS - Load Records
+   Record Length of PS File has to match Rec Size of ESDS
+3) ESDS - Download Records (using SKIP and COUNT)
+   Record Length of PS File has to match Rec Size of ESDS
+4) KSDS - Delete & Define
+   RECORDSIZE, TRACKS, KEYS and INDEXED are mandatory
+5) KSDS - Load Records with REPLACE
+   Record Length of PS File has to match Rec Size of KSDS
+6) KSDS - Merge (REPLACE) and Override (REUSE) Records
+   Record Length of PS File has to match Rec Size of KSDS
+7) KSDS - Download Records (using SKIP and COUNT)
+   Record Length of PS File has to match Rec Size of KSDS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JCL to use FROMADDRESS and TOADDRESS for Downloading Records
+//USERIDV JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                                     
+//SYSPRINT DD SYSOUT=*                                         
+//PSFILE   DD DSN=USERID.VSAM.EMPLOYEE.OUTPUT,DISP=OLD        
+//ESDSFILE DD DSN=USERID.VSAM.ESDS,DISP=SHR                   
+//SYSIN    DD *                                                
+ REPRO INFILE(ESDSFILE) -                                      
+      OUTFILE(PSFILE) -                                        
+      FROMADDRESS(200) -                                       
+      TOADDRESS(600)                                           
+/* 
+++++++
+JCL to use FROMKEY and TOKEY for Downloading Records
+//USERIDV JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                                     
+//SYSPRINT DD SYSOUT=*                                         
+//PSFILE   DD DSN=USERID.VSAM.EMPLOYEE.OUTPUT,DISP=OLD        
+//KSDSFILE DD DSN=USERID.VSAM.KSDS,DISP=SHR                   
+//SYSIN    DD *                                                
+ REPRO INFILE(KSDSFILE) -                                      
+      OUTFILE(PSFILE) -                                        
+      FROMKEY(22222) -                                         
+      TOKEY(77777)                                             
+/*
+==============================================================
+JCL to Print contents of ESDS and KSDS to SPOOL
+//USERIDV JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                                     
+//SYSPRINT DD SYSOUT=*                                         
+//ESDSFILE DD DSN=USERID.VSAM.ESDS,DISP=SHR                   
+//KSDSFILE DD DSN=USERID.VSAM.KSDS,DISP=SHR                   
+//SYSIN    DD *                                                
+ PRINT INFILE(KSDSFILE) -                                      
+      CHAR                                                     
+ PRINT INFILE(ESDSFILE) -                                      
+      CHAR                                                     
+/* 
+============================================
+JCL to Display the Catalog Entries for ESDS and KSDS
+//USERIDV JOB MSGLEVEL=(1,1),MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID
+//STEP010  EXEC PGM=IDCAMS                                     
+//SYSPRINT DD SYSOUT=*                                         
+//SYSIN    DD *                                                
+  LISTCAT ENTRIES(USERID.VSAM.ESDS) ALL                       
+  LISTCAT ENTRIES(USERID.VSAM.KSDS) ALL                       
+/*
+==============================================
+JCL to Delete & Define a RRDS
+//STEP010  EXEC PGM=IDCAMS                  
+//SYSPRINT DD SYSOUT=*                      
+//SYSIN    DD *                             
+ /* IDCAMS COMMAND */                       
+ DELETE USERID.VSAM.RRDS CLUSTER PURGE     
+ SET MAXCC=0                                
+ DEFINE CLUSTER (NAME(USERID.VSAM.RRDS) -  
+        TRACKS(1 1) -                       
+        RECORDSIZE(50 50) -                 
+        NUMBERED -                          
+        ) -                                 
+        DATA (NAME(USERID.VSAM.RRDS.DATA) -
+        )                                   
+/*
+============================================
+JCL to Load Records to RRDS
+//STEP010  EXEC PGM=IDCAMS                      
+//SYSPRINT DD SYSOUT=*                          
+//PSFILE   DD DSN=USERID.VSAM.EMPLOYEE,DISP=SHR
+//RRDSFILE DD DSN=USERID.VSAM.RRDS,DISP=SHR    
+//SYSIN    DD *                                 
+ REPRO INFILE(PSFILE) -                         
+      OUTFILE(RRDSFILE)                         
+/*
+============================================
+JCL to Download Records using FROMNUMBER and TONUMBER
+//STEP010  EXEC PGM=IDCAMS                      
+//SYSPRINT DD SYSOUT=*                          
+//PSFILE   DD DSN=USERID.VSAM.EMPLOYEE,DISP=SHR
+//RRDSFILE DD DSN=USERID.VSAM.RRDS,DISP=SHR    
+//SYSIN    DD *                                 
+ REPRO INFILE(PSFILE) -                         
+      OUTFILE(RRDSFILE) -
+      FROMNUMBER(3) -
+      TONUMBER(7)                         
+/*
+========================================================
+Formula to calculate the RECORDSIZE for Alternate Index
+RECSZ=(AvgRecLen MaxRecLen)
+Assumption =
+Avg No of Employees per Location = 3
+Max No of Employees per Location = 6
+
+AvgRecLen = 5 Bytes of Control Info
+	  + Len of Alternate Key
+	  + Avg No * Len of Primary Key
+	  = 5 + 3 + (3 * 5)
+	  = 23
+
+MaxRecLen = 5 Bytes of Control Info
+	  + Len of Alternate Key
+	  + Max No * Len of Primary Key
+	  = 5 + 3 + (6 * 5)
+	  = 38
+======================================================
+JCL to Delete, Define as well as Load Records into AIX
+//STEP010  EXEC PGM=IDCAMS                                  
+//SYSPRINT DD SYSOUT=*                                      
+//SYSIN    DD *                                             
+ /* IDCAMS COMMAND */                                       
+ DELETE USERID.VSAM.EMPLOYEE.LOCAIX AIX PURGE              
+ SET MAXCC=0                                                
+ DEFINE ALTERNATEINDEX (NAME(USERID.VSAM.EMPLOYEE.LOCAIX) -
+        RELATE(USERID.VSAM.EMPLOYEE) -                     
+        TRACKS(1 1) -                                       
+        RECORDSIZE(23 38) -                                 
+        KEYS(3 20) -                                        
+        NONUNIQUEKEY -                                      
+        ) -                                                 
+        DATA (NAME(USERID.VSAM.EMPLOYEE.LOCAIX.DATA) -     
+        ) -                                                 
+        INDEX (NAME(USERID.VSAM.EMPLOYEE.LOCAIX.INDEX) -   
+        )                                                   
+//STEP020  EXEC PGM=IDCAMS                             
+//SYSPRINT DD SYSOUT=*                                 
+//BASE0    DD DSN=USERID.VSAM.EMPLOYEE,DISP=SHR       
+//AIX1     DD DSN=USERID.VSAM.EMPLOYEE.LOCAIX,DISP=SHR
+//SYSIN    DD *                                        
+ BLDINDEX INFILE(BASE0) -                              
+         OUTFILE(AIX1) 
+/*
+=======================================================
+JCL to create a PATH on the AIX linking it to Base Cluster
+//STEP010  EXEC PGM=IDCAMS                             
+//SYSPRINT DD SYSOUT=*                                 
+//SYSIN    DD *                                        
+ DELETE USERID.VSAM.EMPLOYEE.LOCAIX.PATH PATH PURGE   
+ SET MAXCC=0                                           
+ DEFINE PATH (NAME(USERID.VSAM.EMPLOYEE.LOCAIX.PATH) -
+        PATHENTRY(USERID.VSAM.EMPLOYEE.LOCAIX) -      
+        UPDATE )                                       
+/*                                                 ===========================================================
+Steps to Create a VSAM KSDS with an Alternate Index
+1) Define the Base Cluster
+	USERID.VSAM.EMPLOYEE
+	USERID.VSAM.EMPLOYEE.DATA
+	USERID.VSAM.EMPLOYEE.INDEX
+2) Load Records from PS File to Base Cluster above
+3) Define the AIX Cluster
+	USERID.VSAM.EMPLOYEE.LOCAIX
+	USERID.VSAM.EMPLOYEE.LOCAIX.DATA
+	USERID.VSAM.EMPLOYEE.LOCAIX.INDEX
+   by Relating to Base Cluster = USERID.VSAM.EMPLOYEE
+4) Load Records from Base Cluster to AIX Cluster using BLDINDEX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

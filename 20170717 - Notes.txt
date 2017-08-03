@@ -1,0 +1,93 @@
+Steps to create an Employee Master with Alternate Index on 
+Location and Technology -
+S1 = Define the Base Cluster (KSDS)
+S2 = Sort the Input PS File
+S3 = Load the Sorted Records to Base Cluster (REPRO)
+S4 = Define the Alternate Index (AIX) on Location
+S5 = Load Records from Base Cluster to AIX above (BLDINDEX)
+S6 = Define the Path on Location AIX
+S7 = Define the Alternate Index (AIX) on Technology
+S8 = Load Records from Base Cluster to AIX above (BLDINDEX)
+S9 = Define the Path on Technology AIX
+++++++++++++++++++++++++++++++++++++++
+S1 = Sort the Input PS File
+S2 = Delete the Base Cluster
+     Define the Base Cluster
+     Load the Sorted Records into Base Cluster
+     Define the AIX on Location
+     Define the Path on Location
+     Define the AIX on Technology
+     Define the Path on Technology
+S3 = BLDINDEX for Location
+     BLDINDEX for Technology
+++++++++++++++++++++++++++++
+Any Questions / Queries / Doubts on VSAM ??
+
+Can we start on COBOL Programming ??
+=====================================================
+WORKING-STORAGE SECTION.
+01  WS-INPUT	PIC X(10).
+77  WS-INPUT	PIC X(10).
+PROCEDURE DIVISION.
+    ACCEPT-WS-INPUT
+++++++++
+WORKING-STORAGE SECTION.
+01  WS-INPUT1	PIC X(10).
+77  WS-INPUT2	PIC X(10).
+PROCEDURE DIVISION.
+    ACCEPT WS-INPUT
+++++++++
+WORKING-STORAGE SECTION.
+01  WS-INPUT1	PIC X(10).
+02  WS-INPUT2	PIC X(10).
+PROCEDURE DIVISION.
+    ACCEPT WS-INPUT
+++++++++
+WORKING-STORAGE SECTION.
+01  WS-INPUT1	PIC X(10).
+77  WS-INPUT2	PIC X(10).
+PROCEDURE DIVISION.
+    ACCEPT WS-INPUT1
+    ACCEPT WS-INPUT2
+++++++++
+WORKING-STORAGE SECTION.
+01  WS-INPUTS.
+    03  WS-INPUT1	PIC X(10).
+    03  WS-INPUT2	PIC X(10).
+PROCEDURE DIVISION.
+    ACCEPT WS-INPUT1
+    ACCEPT WS-INPUT2
+====================
+01  WS-GROUPA.
+    03  WS-GROUP1.
+	05  WS-F1	PIC
+	05  WS-F2	PIC
+    03  WS-GROUP2.
+	05  WS-F3	PIC
+	05  WS-F4	PIC
+    03  WS-F5		PIC
+=====================================================
+ IDENTIFICATION DIVISION.               
+ PROGRAM-ID. PROG04.                    
+ DATA DIVISION.                         
+ WORKING-STORAGE SECTION.               
+ 01  WS-DATE-6          PIC 9(06).      
+ 01  WS-DATE-8          PIC 9(08).      
+ 01  WS-TIME            PIC 9(08).      
+ PROCEDURE DIVISION.                    
+     ACCEPT WS-DATE-6 FROM DATE         
+     ACCEPT WS-DATE-8 FROM DATE YYYYMMDD
+     ACCEPT WS-TIME   FROM TIME         
+     DISPLAY '==========='              
+     DISPLAY 'CURRENT DATE1 ', WS-DATE-6
+     DISPLAY '==========='              
+     DISPLAY 'CURRENT DATE2 ', WS-DATE-8
+     DISPLAY '==========='              
+     DISPLAY 'CURRENT TIME  ', WS-TIME  
+     DISPLAY '==========='              
+     STOP RUN.
+
+
+
+
+

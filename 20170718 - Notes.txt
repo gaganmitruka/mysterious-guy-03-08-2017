@@ -1,0 +1,170 @@
+COBOL Coding Rules =
+Col 7		= Comment Line
+Col 8 - 11	= Area A
+Col 12 - 72	= Area B
+
+COBOL Program consists of the following -
+	DIVISION (4)
+	SECTION
+	PARAGRAPH NAMES
+	SENTENCES
+	STATEMENTS
+
+Area A = Division, Section, Para Names, 01 & 77 Level
+Area B = Other Levels, Sentences & Statements
+======================================================
+Every ACCEPT Statement in the COBOL Program requires a Line of
+Input after the SYSIN Statement
+======================================================
+PROG06 Specifications =
+Accept 2 Variables - A & B
+Calculate the following
+	C = A + B	(Addition)
+	D = A - B	(Subtraction)
+	E = A * B	(Multiplication)
+	F = A / B	(Division)
+Display C, D, E, F
+=====================================================
+IF A = B
+   S1
+ELSE
+   IF A > B
+      S2
+   ELSE
+      S3
+   END-IF
+END-IF
+++++++++++++++++++++
+IF A = B
+   IF C = D
+      S1
+   ELSE
+      S2
+   END-IF
+ELSE
+   IF C = D
+      S3
+   ELSE
+      S4
+   END-IF
+END-IF
+===================
+IF ZONE = 'N'
+   Process North
+ELSE
+   IF ZONE = 'S'
+      Process South
+   ELSE
+      IF ZONE = 'W'
+         Process West
+      ELSE
+	 IF ZONE = 'E'
+	    Process East
+	 ELSE
+	    Process Rest
+	 END-IF
+      END-IF
+   END-IF
+END-IF
+++++++
+EVALUATE ZONE
+   WHEN 'N'
+      IF GENDER = 'M'
+	 Process North-Male
+      ELSE
+	 Process North-Female
+      END-IF
+   WHEN 'S'
+      IF GENDER = 'M'
+	 Process North-Male
+      ELSE
+	 Process North-Female
+      END-IF
+   WHEN 'W'
+      IF GENDER = 'M'
+	 Process North-Male
+      ELSE
+	 Process North-Female
+      END-IF
+   WHEN 'E'
+      IF GENDER = 'M'
+	 Process North-Male
+      ELSE
+	 Process North-Female
+      END-IF
+   WHEN OTHER
+      Process Rest
+END-EVALUATE
+DISPLAY 'PROCESSING OVER FOR ' ZONE
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PROCEDURE DIVISION.
+    S1.
+    S2
+    PERFORM PARA-A
+    S3
+    PERFORM PARA-B
+    S4
+    STOP RUN.
+PARA-A.
+    A1
+    A2.
+PARA-B.
+    B1
+    PERFORM PARA-A
+    B2.
++++++++
+S1 S2 A1 A2 S3 B1 A1 A2 B2 S4
+=============================
+PROCEDURE DIVISION.
+    S1.
+    S2
+    PERFORM PARA-A
+    S3
+    PERFORM PARA-B THRU PARA-C
+    S4
+    PERFORM PARA-A THRU PARA-B
+    STOP RUN.
+PARA-A.
+    A1
+    A2.
+PARA-B.
+    B1
+    B2.
+PARA-C.
+    C1
+    C2.
++++++++
+S1 S2 A1 A2 S3 B1 B2 C1 C2 S4 A1 A2 B1 B2
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PROCEDURE DIVISION.
+    Accept the Input
+    If Input is Numeric
+	PERFORM PROCESS-PARA
+    Else
+	Display Error Message
+    End If
+    STOP RUN.
+PROCESS-PARA.
+    PERFORM PARA-ADD
+    PERFORM PARA-SUBTRACT
+    PERFORM PARA-MULTIPLY
+    PERFORM PARA-DIVIDE.
+PARA-ADD.
+    Do the Addition, Move to Edited Field & Display Value.
+PARA-SUBTRACT.
+    Do the Subtraction, Move to Edited Field & Display Value.
+PARA-MULTIPLY.
+    Do the Multiplication, Move to Edited Field & Display Value.
+PARA-DIVIDE.
+    Do the Division, Move to Edited Field & Display Value.
++++++++++++++
+Accept the Input iteratively
+If Input = XXXX
+   Quit the Program
+Else
+   Execute the Program
+
+
+
+
+

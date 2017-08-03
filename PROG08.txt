@@ -1,0 +1,71 @@
+000100 IDENTIFICATION DIVISION.                                         00010000
+000200 PROGRAM-ID. PROG08.                                              00020000
+000300 DATA DIVISION.                                                   00030000
+000400 WORKING-STORAGE SECTION.                                         00040000
+000500 01  WS-INPUTS.                                                   00050000
+000600     03  WS-A           PIC 9(02).                                00060000
+000700     03  WS-B           PIC 9(02).                                00070000
+000800 01  WS-OUTPUTS.                                                  00080000
+000900     03  WS-C           PIC 9(03)    VALUE ZERO.                  00090000
+001000     03  WS-D           PIC S9(02)   VALUE ZERO.                  00100000
+001100     03  WS-E           PIC 9(04)    VALUE ZERO.                  00110000
+001200     03  WS-F           PIC 9(02)V99 VALUE ZERO.                  00120000
+001300 01  WS-DISPLAY.                                                  00130000
+001400     03  WS-C-O         PIC ZZ9.                                  00140000
+001500     03  WS-D-O         PIC -9(02).                               00150000
+001600     03  WS-E-O         PIC $Z,ZZ9.                               00160000
+001700     03  WS-F-O         PIC 9(02).99.                             00170000
+001800 PROCEDURE DIVISION.                                              00180000
+001900 MAIN-PARA.                                                       00190000
+002000     DISPLAY 'MAIN PARA      '                                    00200001
+002100     ACCEPT WS-A                                                  00210000
+002200     ACCEPT WS-B                                                  00220000
+002300     IF WS-A IS NUMERIC AND WS-B IS NUMERIC                       00230000
+002400        PERFORM PROCESS-PARA                                      00240000
+002500     ELSE                                                         00250000
+002600        DISPLAY 'INPUTS ARE NOT NUMERIC'                          00260000
+002700        STOP RUN                                                  00270001
+002800     END-IF.                                                      00280001
+002900*                                                                 00290000
+003000 PROCESS-PARA.                                                    00300000
+003100     DISPLAY 'PROCESS PARA   '                                    00310001
+003200     INITIALIZE WS-DISPLAY                                        00320000
+003300     PERFORM PARA-ADD                                             00330000
+003400     PERFORM PARA-SUBTRACT                                        00340000
+003500     PERFORM PARA-MULTIPLY                                        00350000
+003600     PERFORM PARA-DIVIDE                                          00360000
+003700     DISPLAY '==========='.                                       00370000
+003800 PARA-ADD.                                                        00380000
+003900     DISPLAY 'PARA ADD       '                                    00390001
+004000     DISPLAY '==========='                                        00400000
+004100     ADD WS-A TO WS-B GIVING WS-C                                 00410000
+004200     MOVE WS-C TO WS-C-O                                          00420000
+004300     DISPLAY 'ADD  ', WS-C-O.                                     00430000
+004400 PARA-SUBTRACT.                                                   00440000
+004500     DISPLAY 'PARA SUBTRACT  '                                    00450001
+004600     SUBTRACT WS-A FROM WS-B GIVING WS-D                          00460000
+004700     MOVE WS-D TO WS-D-O                                          00470000
+004800     DISPLAY 'SUB  ', WS-D-O.                                     00480000
+004900 PARA-MULTIPLY.                                                   00490000
+005000     DISPLAY 'PARA MULTIPLY  '                                    00500001
+005100     MULTIPLY WS-A BY WS-B GIVING WS-E                            00510000
+005200     MOVE WS-E TO WS-E-O                                          00520000
+005300     DISPLAY 'MULT ', WS-E-O.                                     00530000
+005400*                                                                 00540000
+005500 PARA-DIVIDE.                                                     00550000
+005600     DISPLAY 'PARA DIVIDE    '                                    00560001
+005700     IF WS-B = ZERO                                               00570000
+005800        DISPLAY 'ZERO DIVIDE NOT POSSIBLE - ZERO CHECK'           00580000
+005900     ELSE                                                         00590000
+006000        DIVIDE WS-A BY WS-B GIVING WS-F                           00600000
+006100        MOVE WS-F TO WS-F-O                                       00610000
+006200        DISPLAY 'DIV  ', WS-F-O                                   00620000
+006300     END-IF.                                                      00630000
+006400*                                                                 00640000
+006500     IF WS-B IS POSITIVE                                          00650000
+006600        DIVIDE WS-A BY WS-B GIVING WS-F                           00660000
+006700        MOVE WS-F TO WS-F-O                                       00670000
+006800        DISPLAY 'DIV  ', WS-F-O                                   00680000
+006900     ELSE                                                         00690000
+007000        DISPLAY 'ZERO DIVIDE NOT POSSIBLE - POSITIVE CHECK'       00700001
+007100     END-IF.                                                      00710001

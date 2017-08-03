@@ -1,0 +1,7 @@
+Mapsets = PnnAS01 - 09
+Program = PnnAP01 - 09
+Trans   = PnnA - I
+
+where nn = your 2 digit TSO Userid
+
+ceci send map('calmap') mapset('p01as01') erase   

@@ -1,0 +1,65 @@
+//JOBY  JOB LA2719,PCS,CLASS=A,COND=(10,LE),NOTIFY=DA0001T
+//S1    EXEC PGM=P1					(4)
+//S2    EXEC PGM=P2,COND=(4,LT,S1)			(6)
+//S3    EXEC PGM=P3,COND=(8,LE,S2)			(4)
+//S4    EXEC PGM=P4,COND=(8,LT)				(ABENDS)
+//S5    EXEC PGM=P5,COND=((4,LT,S1),ONLY)		(4)
+//S6    EXEC PGM=P6,COND=(8,LT,S3)			(5)
+//S7    EXEC PGM=P7,COND=((0,LT,S5),EVEN)		(0)
+//S8    EXEC PGM=P8,COND=(0,LT,S6)			(4)
+//S9    EXEC PGM=P9,COND=(8,GT,S7)			(6)
+//S10   EXEC PGM=P10,COND=(4,GT,S9)			(8)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+S1 = Execute
+First step hence No condition checking
+S2 = Executes
+Job CC	- 10 le 4	= False
+Step CC	- 4 lt 4	= False
+S3 = Executes
+Job CC	- 10 le 4	= False
+	- 10 le 6	= False
+Step CC	- 8 le 6	= False
+===============================
+Parameter Overriding -
+//STP1 EXEC PROC=PROCASV,
+//	Parm1.Stpname1=<New Value>,
+//	Parm2.Stpname1=<New Value>,
+//	Parm3.Stpname2=<New Value>,
+//	Parm4.Stpname2=<New Value>
+//Stpname1.ddname DD DSN=
+//Stpname2.ddname DD DSN=
+//Stpname3.ddname DD DSN=
+===========================================================
+JCL to add Zero field before Field to be summed preventing Overflow
+//DSRP001S JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//*        TYPRUN=SCAN,                                    
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.SORTOUT,                    
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//STEP020  EXEC PGM=SORT                                   
+//SORTIN   DD DSN=DSRP001.TEST.SORTIN,DISP=SHR             
+//SORTOUT  DD DSN=&&TEMP1,                                 
+//            DISP=(NEW,PASS),                             
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//SYSOUT   DD SYSOUT=*                                     
+//SYSIN    DD *                                            
+  SORT FIELDS=COPY                                         
+  INREC FIELDS=(1:1,19,20:C'0',21:20,4,25:26X)             
+/*                                                         
+//STEP030  EXEC PGM=SORT                                   
+//SORTIN   DD DSN=&&TEMP1,DISP=OLD                         
+//SORTOUT  DD DSN=DSRP001.TEST.SORTOUT,                    
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//SYSOUT   DD SYSOUT=*                                     
+//SYSIN    DD *                                            
+  SORT FIELDS=(1,9,CH,A)                                   
+  SUM FIELDS=(20,5,ZD)                                     
+/*

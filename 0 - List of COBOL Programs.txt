@@ -1,0 +1,11 @@
+List of Programs =
+PROG01 = Display Format
+PROG02 = Accept Format 1 or 2 Variables
+PROG03 = Accept with Data Structure
+PROG04 = Accept of System Date & Time
+PROG05 = MOVE Variables
+PROG06 = Arithmatic Operations
+PROG07 = IF Condition Checking
+PROG08 = PERFORM Statement
+PROG09 = perform until
+PROG10 =

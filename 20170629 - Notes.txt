@@ -1,0 +1,260 @@
+ID Field
+| Name Field
+| |	   Operation Field
+| |	   |	Positional Parameters
+| |	   |	|		 Keyword Parameters
+| |	   |	|		 |
+//DSRP001T JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), - Name = JobName          
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001               
+//*                                                        
+	   Operation Field
+	   |    Keyword Parameters
+	   |	|
+//STEP010  EXEC PGM=IEFBR14 - Name = StepName                              
+	   Operation Field
+	   |    Keyword Parameters
+	   |	|
+//FILE2    DD DSN=DSRP001.TEST.FILE2, - Name - DDName                     
+//            DISP=(MOD,CATLG,DELETE), - (Positional Parameters)                    
+//            SPACE=(TRK,(1,1,0),RLSE), - (Positional Parameters)                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*		   |
+		   Keyword Sub Parameters
++++++++++++++++++++++++++++++++++++++++++
+Cols  1 -  2 = ID Field
+Cols  3 - 10 = Name Field (Max 8 Characters, rule as Qualifier)
+Cols 12 - 15 = Operation Field
+Cols  4 - 16 = Parameter Field (Positional / Keyword)
+===================================================================
+//DSRP001T JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE2    DD DSN=DSRP001.TEST.FILE2,                      
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//STEP020  EXEC PGM=IEFBR14                                
+//FILE2    DD DSN=DSRP001.TEST.FILE2,                      
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+=============================================================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),            
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                
+//*                                                         
+//STEP010  EXEC PGM=IEFBR14                                 
+//FILE1    DD DSN=DSRP001.TEST.FILE2,                       
+//            DISP=(MOD,DELETE,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                       
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS) 
+//*                                                         
+//STEP020  EXEC PGM=IEBGENER                                
+//SYSUT1   DD DSN=DSRP001.TEST.FILE1,DISP=OLD               
+//SYSUT2   DD DSN=DSRP001.TEST.FILE2,                       
+//            DISP=(NEW,CATLG,DELETE),                      
+//            SPACE=(TRK,(1,1),RLSE),                       
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS) 
+//SYSPRINT DD SYSOUT=*                                      
+//SYSIN    DD *    
++++++++++++++++++++++++++
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,
+//         RESTART=STEP020,                  
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID 
+//*                                          
+//STEP010  EXEC PGM=IEFBR14                  
+//FILE1    DD DSN=DSRP001.TEST.FILE2,        
+//            DISP=(MOD,DELETE,DELETE),      
+//            SPACE=(TRK,(1,1),RLSE),        
+//            DCB=(LRECL=50,BLKSIZE=5000,RECF
+//*                                          
+//STEP020  EXEC PGM=IEBGENER                 
+//SYSPRINT DD SYSOUT=*                       
+//SYSIN    DD *                              
+//SYSUT1   DD DSN=DSRP001.TEST.FILE1,DISP=OLD
+//SYSUT2   DD DSN=DSRP001.TEST.FILE2,DISP=OLD
+//
+================================================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),            
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                
+//*                                                         
+//STEP010  EXEC PGM=IEFBR14                                 
+//FILE3    DD DSN=DSRP001.TEST.FILE3,                       
+//            DISP=(MOD,DELETE,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                       
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS) 
+//*                                                         
+//STEP020  EXEC PGM=IEBGENER                                
+//SYSUT1   DD DSN=DSRP001.TEST.FILE1,DISP=OLD               
+//         DD DSN=DSRP001.TEST.FILE2,DISP=OLD               
+//SYSUT2   DD DSN=DSRP001.TEST.FILE3,                       
+//            DISP=(NEW,CATLG,DELETE),                      
+//            SPACE=(TRK,(1,1),RLSE),                       
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS) 
+//SYSPRINT DD SYSOUT=*                                      
+//SYSIN    DD *                                             
+//			
++++++++++++++++
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE3    DD DSN=DSRP001.TEST.FILE3,                      
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//STEP020  EXEC PGM=IEBGENER                               
+//SYSUT1   DD *                                            
+INSTREAM - THIS IS RECORD 1                                
+INSTREAM - THIS IS RECORD 2                                
+INSTREAM - THIS IS RECORD 3                                
+INSTREAM - THIS IS RECORD 4                                
+/*                                                         
+//SYSUT2   DD DSN=DSRP001.TEST.FILE3,                      
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*                                     
+//SYSIN    DD *  
++++++++++++++++
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),            
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                
+//*                                                         
+//STEP010  EXEC PGM=IEFBR14                                 
+//FILE3    DD DSN=DSRP001.TEST.PDS3,                        
+//            DISP=(MOD,DELETE,DELETE),                     
+//            SPACE=(TRK,(1,1,1),RLSE),                     
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO) 
+//*                                                         
+//STEP020  EXEC PGM=IEBGENER                                
+//SYSUT1   DD *                                             
+INSTREAM - THIS IS RECORD 1                                 
+INSTREAM - THIS IS RECORD 2                                 
+INSTREAM - THIS IS RECORD 3                                 
+INSTREAM - THIS IS RECORD 4                                 
+/*                                                                                                    
+//SYSUT2   DD DSN=DSRP001.TEST.PDS3,                       
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1,1),RLSE),                    
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO)
+//SYSPRINT DD SYSOUT=*                                     
+//SYSIN    DD *                                            
+   GENERATE MAXNAME=3                                      
+   MEMBER NAME=(ASV1,ASV2,ASV3)                            
+/*
+===============================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE3    DD DSN=DSRP001.TEST.FILE3,                      
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//STEP020  EXEC PGM=IEBGENER                               
+//SYSUT1   DD DSN=DSRP001.TEST.FILE1,DISP=OLD              
+//SYSUT2   DD DSN=DSRP001.TEST.FILE3,                      
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*
+//* FIELD=(LENGTH,POS IN INPUT,FORMAT,POS IN OUTPUT)                                     
+//SYSIN    DD *                                            
+   GENERATE MAXFLDS=4      
+   RECORD FIELD=(5,16,,1), 
+          FIELD=(5,11,,6), 
+          FIELD=(5,6,,11), 
+          FIELD=(5,1,,16)  
+/*                         
+//                         
+//* INPUT DATA             
+----+----1----+----2----+--
+AAAA BBBB CCCC DDDD        
+//* OUTPUT DATA            
+----+----1----+----2----+--
+DDDD CCCC BBBB AAAA
+===================================================================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),            
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                
+//*                                                         
+//STEP010  EXEC PGM=IEFBR14                                 
+//FILE3    DD DSN=DSRP001.TEST.PDS2,                        
+//            DISP=(MOD,DELETE,DELETE),                     
+//            SPACE=(TRK,(1,1,1),RLSE),                     
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO) 
+//*                                                         
+//STEP020  EXEC PGM=IEBCOPY                                 
+//INPDS    DD DSN=DSRP001.TEST.PDS1,DISP=OLD                
+//OUTPDS   DD DSN=DSRP001.TEST.PDS2,                        
+//            DISP=(NEW,CATLG,DELETE),                      
+//            SPACE=(TRK,(1,1,1),RLSE),                     
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO) 
+//SYSPRINT DD SYSOUT=*                                      
+//SYSIN    DD *                                             
+  COPY INDD=INPDS,OUTDD=OUTPDS                              
+/* 
+===============================================================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE3    DD DSN=DSRP001.TEST.PDS2,                       
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1,1),RLSE),                    
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO)
+//*                                                        
+//STEP020  EXEC PGM=IEBCOPY                                
+//INPDS    DD DSN=DSRP001.TEST.PDS1,DISP=OLD               
+//OUTPDS   DD DSN=DSRP001.TEST.PDS2,                       
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1,1),RLSE),                    
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO)
+//SYSPRINT DD SYSOUT=*                                          
+//* EXCLUDE WILL LEAVE OUT THE MEMBER MENTIONED & COPY THE REST 
+//SYSIN    DD *                                                 
+  COPY INDD=INPDS,OUTDD=OUTPDS                                  
+  EXCLUDE MEMBER=(ASV3)                                         
+/*                                                              
+//                                                              
+//* SELECT WILL COPY THE MEMBERS MENTIONED                      
+  SELECT MEMBER=(ASV1,ASV2) 
++++++++++++++++++++++++++++++++++++++++++++++
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID    
+//*                                             
+//STEP010  EXEC PGM=IEBCOPY                     
+//INPDS    DD DSN=DSRP001.TEST.PDS1,DISP=OLD    
+//SYSPRINT DD SYSOUT=*                          
+//SYSIN    DD *                                 
+  COPY INDD=INPDS,OUTDD=INPDS                   
+/*
+===============================================
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),            
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                
+//*                                                         
+//STEP010  EXEC PGM=IEFBR14                                 
+//FILE3    DD DSN=DSRP001.TEST.PDS2,                        
+//            DISP=(MOD,DELETE,DELETE),                     
+//            SPACE=(TRK,(1,1,1),RLSE),                     
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO) 
+//*                                                         
+//STEP020  EXEC PGM=IEBCOPY                                 
+//INPDS    DD DSN=DSRP001.TEST.PDS1,DISP=OLD                
+//OUTPDS   DD DSN=DSRP001.TEST.PDS2,                        
+//            DISP=(NEW,CATLG,DELETE),                      
+//            SPACE=(TRK,(1,1,1),RLSE),                     
+//            DCB=(LRECL=80,BLKSIZE=8000,RECFM=FB,DSORG=PO) 
+//SYSPRINT DD SYSOUT=*                                      
+//* SELECT WILL COPY THE MEMBERS MENTIONED & RENAME THEM    
+//SYSIN    DD *                              
+  COPY INDD=INPDS,OUTDD=OUTPDS               
+  SELECT MEMBER=((ASV1,MEM1,R),(ASV2,MEM2,R))
+/*                                           
+//
+================================================================
+
+
+

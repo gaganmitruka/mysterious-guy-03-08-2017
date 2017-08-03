@@ -1,0 +1,126 @@
+//DSRP001C JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),             
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID                 
+//*                                                          
+//INPROC   PROC                                              
+//PSTEP010 EXEC PGM=IEFBR14                                  
+//FILE1    DD DSN=DSRP001.TEST.SORTOUT,                      
+//            DISP=(MOD,DELETE,DELETE),                      
+//            SPACE=(TRK,(1,1),RLSE),                        
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)  
+//*                                                          
+//PSTEP020 EXEC PGM=SORT                                     
+//SORTIN   DD DSN=DSRP001.TEST.EMPLOYEE,DISP=SHR             
+//SORTOUT  DD DSN=DSRP001.TEST.SORTOUT,                      
+//            DISP=(NEW,CATLG,DELETE),                       
+//            SPACE=(TRK,(1,1),RLSE),                        
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)  
+//SYSOUT   DD SYSOUT=*                                       
+//SYSIN    DD DUMMY                                          
+//         PEND
+//*                                              
+//JSTEP010 EXEC INPROC
+//PSTEP020.SYSIN DD *                         
+   SORT FIELDS=(1,5,CH,A)                     
+   INREC FIELDS=(1:1,5,6:21,3,9:6,15,24:24,27)
+/*
+======================================================
+//DSRP001P JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001    
+//PROCLIB  JCLLIB ORDER=(DSRP001.TEST.PROCLIB)  
+//*                                             
+//JSTEP010 EXEC PROC3,CITY=NEWDELHI,ZONE=NORTH  
+//JSTEP020 EXEC PROC3,CITY=CHENNAI,ZONE=SOUTH   
+//JSTEP030 EXEC PROC3,CITY=KOLKATA,ZONE=EAST    
+//JSTEP040 EXEC PROC3                           
+//JSTEP050 EXEC PROC3,CITY=PUNE,ZONE=WEST       
+//JSTEP060 EXEC PROC3,CITY=BHOPAL,ZONE=CENTRAL  
++++++++++++++++++++++
+//PROC3    PROC CITY=ALL,ZONE=INDIA                        
+//*                                                        
+//PSTEP010 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.A.&ZONE..&CITY,             
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//PSTEP020 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.A.&ZONE..&CITY,             
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//         PEND                                            
+//* 
+==============================================================
+//DSRP001P JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), 
+//         MSGCLASS=X,CLASS=A,NOTIFY=DSRP001     
+//PROCLIB  JCLLIB ORDER=(DSRP001.TEST.PROCLIB)   
+//*                                              
+//JSTEP010 EXEC PROC4,YR=2017,MTH=JUL,CITY=PUNE  
+//*                                              
+//JSTEP020 EXEC PROC4,YR=2017,MTH=AUG,CITY=MUMBAI
+//*                                              
++++++++++++++++
+//PROC4    PROC YR=2000,MTH=ALL,CITY=INDIA                 
+//*                                                        
+//PSTEP010 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.A.Y&YR.&MTH..&CITY,         
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//PSTEP020 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=DSRP001.TEST.A.Y&YR.&MTH..&CITY,         
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//         PEND                                            
+//*                                                        
+=============================================================
+//STEP010  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=FILE1,DISP=SHR
+//SYSUT2   DD DSN=OFILE1,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
+//STEP020  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=FILE2,DISP=SHR
+//SYSUT2   DD DSN=OFILE2,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
+//STEP030  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=FILE3,DISP=SHR
+//SYSUT2   DD DSN=OFILE3,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
+//STEP040  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=FILE4,DISP=SHR
+//SYSUT2   DD DSN=OFILE4,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
+//STEP050  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=FILE5,DISP=SHR
+//SYSUT2   DD DSN=OFILE5,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
++++++++++++++++++++
+//DSRP001C JOB CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//CPROC    PROC
+//STEP000  EXEC PGM=IEFBR14
+//F1       DD DSN=&OF,DISP=(MOD,DELETE,DELETE)
+//*
+//STEP010  EXEC PGM=IEBGENER
+//SYSUT1   DD DSN=&IF,DISP=SHR
+//SYSUT2   DD DSN=&OF,DISP=(NEW,CATLG,DELETE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD DUMMY
+//         PEND
+//JSTP010  EXEC CPROC,IF=FILE1,OF=OFILE1
+//JSTP020  EXEC CPROC,IF=FILE2,OF=OFILE2
+//JSTP030  EXEC CPROC,IF=FILE3,OF=OFILE3
+//JSTP040  EXEC CPROC,IF=FILE4,OF=OFILE4
+//JSTP050  EXEC CPROC,IF=FILE5,OF=OFILE5
+
+
+
+                                                     
+
+                                             

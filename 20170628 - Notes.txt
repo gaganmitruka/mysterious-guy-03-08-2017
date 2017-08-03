@@ -1,0 +1,9 @@
+Edit the THIRDPGM
+Delete the Line containing STOP RUN (3rd last line)
+Save the COBOL Program. Press PF3
+Edit the COBCOMP & C ALL SECPGM THIRDPGM
+Submit this JCL to compile the Program
+- you should get MAXCC=0
+Edit the COBRUN & C ALL SECPGM THIRDPGM
+Submit this JCL
+- you should get JCL Abended with Error S000 U4038

@@ -1,0 +1,177 @@
+COBOL TOPICS Covered so far -
+1) File Handling
+2) Report Printing
+3) Page Break
+4) COBOL Sort
+++++++++++++++++++
+Topics pending so far -
+5) Control Break
+6) VSAM File Handling Indexed (KSDS) & Sequential (ESDS)
+7) Arrays & Table Handling
+8) Calling Sub Routines
+
+Topics for Module 2 Test = All the above. May not have (7) and / or (8)
+=======================================================================
+Program Specifications:
+1) You need to print the Listing of Employees on the basis of Location and       within that on Technology.
+2) When there is a change in Technology, you need to print Technology Totals.
+3) When there is a change in Location, you need print Technology as well as
+   Location Totals.
+4) At End of File, you need to pirnt the Company Totals. 
+==============================================================================
+DATE: DD/MM/CCYY						TIME: HH:MM:SS
+LOCATION-WISE / TECHNOLOGY-WISE LISTING				PAGE: Z9
+LOC: MUM	TECH: .NET
+
+ID     EMPLOYEE NAME    BIRTH DATE    EARNINGS  DEDUCTIONS  TOT SALARY  
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+
+TECHNOLOGY TOTALS	Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+			++++ END OF THE PAGE ++++
+
+DATE: DD/MM/CCYY						TIME: HH:MM:SS
+LOCATION-WISE / TECHNOLOGY-WISE LISTING				PAGE: Z9
+LOC: MUM	TECH: JAVA
+
+ID     EMPLOYEE NAME    BIRTH DATE    EARNINGS  DEDUCTIONS  TOT SALARY  
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+
+TECHNOLOGY TOTALS	Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+LOCATION TOTALS		Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+			++++ END OF THE PAGE ++++
+
+DATE: DD/MM/CCYY						TIME: HH:MM:SS
+LOCATION-WISE / TECHNOLOGY-WISE LISTING				PAGE: Z9
+LOC: PUN	TECH: M/F
+
+ID     EMPLOYEE NAME    BIRTH DATE    EARNINGS  DEDUCTIONS  TOT SALARY  
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+
+TECHNOLOGY TOTALS	Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+			++++ END OF THE PAGE ++++
+
+DATE: DD/MM/CCYY						TIME: HH:MM:SS
+LOCATION-WISE / TECHNOLOGY-WISE LISTING				PAGE: Z9
+LOC: PUN	TECH: SAP
+
+ID     EMPLOYEE NAME    BIRTH DATE    EARNINGS  DEDUCTIONS  TOT SALARY  
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+XXXXX  XXXXXXXXXXXXXXX  DD/MM/YYYY   ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+
+TECHNOLOGY TOTALS	Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+LOCATION TOTALS		Z9	     ZZ,ZZ9.99   ZZ,ZZ9.99   ZZ,ZZ9.99
+			++++ END OF THE PAGE ++++
+
+DATE: DD/MM/CCYY						TIME: HH:MM:SS
+LOCATION-WISE / TECHNOLOGY-WISE LISTING				PAGE: Z9
+
+COMPANY TOTALS		Z9	    ZZZ,ZZ9.99  ZZZ,ZZ9.99  ZZZ,ZZ9.99
+			++++ END OF THE PAGE ++++
+============================================================================
+WORKING-STORAGE SECTION.
+Define the 4th Heading Lines
+Use the earlier defined 3 Heading Lines, Detail Line & Total Line
+Define the necessary Variables
+01  WS-VARIABLES.
+    03  TEMP-LOC	PIC X(03) VALUE SPACES.
+    03  TEMP-TECH	PIC X(05) VALUE SPACES.
+    03  TECH-TOTALS	VALUE ZERO.
+	05  Emp Count; Earnings & Deductions
+    03  LOC-TOTALS	VALUE ZERO.
+	05  Emp Count; Earnings & Deductions
+PROCEDURE DIVISION.
+MAIN-PARA.
+    PERFORM INIT-PARA
+    PERFORM PROCESS-PARA  UNTIL  END-OF-FILE
+    PERFORM END-PARA
+    STOP RUN.
+INIT-PARA.
+    SORT the Input Employee-File on Loc & Tech
+    Open the Files
+    Date Time Para
+    PERFORM READ-PARA
+    MOVE EMP-LOC	TO TEMP-LOC
+    MOVE EMP-TECH	TO TEMP-TECH.
+PROCESS-PARA.
+    IF EMP-LOC = TEMP-LOC
+       IF EMP-TECH = TEMP-TECH
+	  NEXT SENTENCE
+       ELSE
+	  PERFORM TECH-CHANGE-PARA
+       END-IF
+    ELSE
+       PERFORM TECH-CHANGE-PARA
+       PERFORM LOC-CHANGE-PARA
+    END-IF.
+    PERFORM PRINT-PARA.
+    PERFORM READ-PARA.
+PRINT-PARA.
+    Move Employee Details to DETAIL-LINE & Write it
+    Accumulate the Tech Totals (Loc Totals & Comp Totals)
+TECH-CHANGE-PARA.
+    Move Tech Totals to TOTAL-LINE & Write it.
+    Add Tech Totals to Loc Totals; Reset Tech Totals
+    MOVE EMP-TECH TO TEMP-TECH; MOVE 6 TO LINE-COUNT
+LOC-CHANGE-PARA.
+    Move Loc Totals to TOTAL-LINE & Write it.
+    Add Loc Totals to Company Totals; Reset Loc Totals
+    MOVE EMP-LOC TO TEMP-LOC.
+END-PARA.
+    PERFORM TECH-CHANGE-PARA
+    PERFORM LOC-CHANGE-PARA
+    Move Comp Totals to TOTAL-LINE & Write
+    Close the File.
+======================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==== Rupesh's Version ====
+PROCESS-PARA.
+    IF EMP-LOC = TEMP-LOC  AND  EMP-TECH = TEMP-TECH
+	Print the Employee Details
+    ELSE
+	IF EMP-LOC NOT = TEMP-LOC
+	   Print Tech Totals & Loc Totals
+	ELSE
+	   Print Tech Totals
+	END-IF
+    END-IF.
+    Read the Sorted-File
+Code the Other Paras.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

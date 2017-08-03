@@ -1,0 +1,38 @@
+Editing Commands we have learnt so far -
+
+prof / profile
+res / reset
+save
+can / cancel
+rec on / recovery on
+undo
+cols
+I = Insert a Single Line
+In = Insert n Lines
+D  = Delete a Single Line
+Dn = Delete n Lines
+DD - DD = Delete a Block of Lines
+R = Repeat a Single Line
+Rn = Repeat a Line N times
+RR - RR = Repeat a Block of Lines single time
+RR - RRn = Repeat a Block of Lines n times
+C = Copy a Single Line
+A = After
+An = paste n times after
+B = Before
+Bn = paste n times before
+Cn = Copy n Lines
+CC - CC = Copy a Block of n lines	
+M = cut a single Line
+Mn = Cut n number of lines
+MM - MM = cut a block of Lines
+============== ***, ### defines any string ====================
+F *** = find first occurance of ***
+F *** all = find occurance of a *** and shows total count
+F '*** ***' = find *** *** in a string
+F '*** ***' all = find *** *** in a string and shows number of occurance of string
+
+c *** ### = Replaces *** with ### in first occurance
+c *** ### all = Replaces *** with ### all occurance
+c '*** ***' '### ###' = Replaces *** *** with ### ### in first occurance
+c '*** ***' '### ###' all = Replaces *** *** with ### ### all occurance

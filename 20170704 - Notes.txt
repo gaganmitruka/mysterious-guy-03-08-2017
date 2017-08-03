@@ -1,0 +1,236 @@
+Member = IJCL1 in USERID.TEST.JCLLIB
+//USERIDI JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID               
+//IPROC1   PROC                                            
+//*                                                        
+//PSTEP010 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.PUNE,                     
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//PSTEP020 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.PUNE,                     
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//         PEND                                            
+//*                                                        
+//JSTEP010 EXEC PROC=IPROC1
+==============================================================
+Member = IJCL2 in USERID.TEST.JCLLIB
+//USERIDI JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID               
+//IPROC1   PROC CITY=ALL                                   
+//*                                                        
+//PSTEP010 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.&CITY,                    
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//*                                                        
+//PSTEP020 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.&CITY,                    
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//         PEND                                            
+//*                                                        
+//JSTEP010 EXEC IPROC1,CITY=PUNE
+================================
+Member = PJCL5 in USERID.TEST.JCLLIB
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID    
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)  
+//*                                             
+//JSTEP010 EXEC PROC=COPYPROC                   
+//*                                             
+//PSTEP010.SYSUT2 DD DISP=MOD                   
+++++++++++
+Member = COPYPROC in USERID.TEST.PROCLIB
+//COPYPROC PROC                              
+//*                                          
+//PSTEP010 EXEC PGM=IEBGENER                 
+//SYSUT1   DD DSN=USERID.TEST.FILE1,DISP=OLD
+//SYSUT2   DD DSN=USERID.TEST.FILE3,DISP=OLD
+//SYSPRINT DD SYSOUT=*                       
+//SYSIN    DD DUMMY                          
+//         PEND   
+================================================================
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),        
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID            
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)          
+//*                                                     
+//JSTEP020 EXEC PROC=PROC2                              
+//PSTEP010.FILE1 DD DSN=USERID.TEST.CG.MUMBAI,         
+//         DISP=(MOD,DELETE,DELETE),                    
+//         SPACE=(TRK,(1,1),RLSE),                      
+//         DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//PSTEP020.FILE1 DD DSN=USERID.TEST.CG.MUMBAI,         
+//         DISP=(NEW,CATLG,DELETE),                     
+//         SPACE=(TRK,(1,1),RLSE),                      
+//         DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+++++++++++++
+//PROC2    PROC CITY=INDIA                                 
+//PSTEP010 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.&CITY,                    
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//PSTEP020 EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.A.&CITY,                    
+//            DISP=(NEW,CATLG,DELETE),                     
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//         PEND                                            
+//*
++++++++++++++++
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),        
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID            
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)          
+//*                                                     
+//JSTEP020 EXEC PROC=PROC2                              
+//PSTEP020.FILE1 DD SPACE=(CYL,(1,1),RLSE)
+===============================================================
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1), 
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID     
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)   
+//*                                              
+//JSTEP010 EXEC PROC=COPYPROC                    
+//PSTEP010.SYSUT1 DD                             
+//         DD                                    
+//         DD                                    
+//         DD DSN=USERID.TEST.FILE4,DISP=OLD    
+//*PSTEP010.SYSUT2 DD DISP=OLD                   
+//*                                              
++++++++++++
+//COPYPROC PROC                                
+//*                                            
+//PSTEP010 EXEC PGM=IEBGENER                   
+//SYSUT1   DD DSN=USERID.TEST.FILE1,DISP=OLD  
+//         DD DSN=USERID.TEST.FILE2,DISP=OLD  
+//         DD DSN=USERID.TEST.FILE3,DISP=OLD  
+//SYSUT2   DD DSN=USERID.TEST.FILEOUT,DISP=OLD
+//SYSPRINT DD SYSOUT=*                         
+//SYSIN    DD DUMMY                            
+//         PEND 
+====================================================================
+//USERIDA JOB CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//*
+//STEP1   EXEC PGM=PROG1
+//STEPLIB DD DSN=USERID.TEST.LOADLIB,DISP=SHR                               
+//FILE1   DD DSN=USERID.TEST.FILE1,DISP=SHR
+//*
+//STEP2   EXEC PGM=PROG2
+//STEPLIB DD DSN=USERID.TEST.LOADLIB,DISP=SHR                               
+//FILE2   DD DSN=USERID.TEST.FILE2,DISP=SHR
+//*
+//STEP3   EXEC PGM=PROG3
+//STEPLIB DD DSN=USERID.TEST.LOADLIB,DISP=SHR                               
+//FILE3   DD DSN=USERID.TEST.FILE3,DISP=SHR
+++++++++++
+//USERIDA JOB CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//JOBLIB DD DSN=USERID.TEST.LOADLIB,DISP=SHR                               
+//*
+//STEP1   EXEC PGM=PROG1
+//FILE1   DD DSN=USERID.TEST.FILE1,DISP=SHR
+//*
+//STEP2   EXEC PGM=PROG2
+//STEPLIB DD DSN=USERID.ACPT.LOADLIB,DISP=SHR                               
+//FILE2   DD DSN=USERID.TEST.FILE2,DISP=SHR
+//*
+//STEP3   EXEC PGM=PROG3
+//FILE3   DD DSN=USERID.TEST.FILE3,DISP=SHR
+++++++++++
+//USERIDA JOB CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//JOBLIB DD DSN=USERID.PROD.LOADLIB,DISP=SHR                               
+//*
+//STEP1   EXEC PGM=PROG1
+//FILE1   DD DSN=USERID.TEST.FILE1,DISP=SHR
+//*
+//STEP2   EXEC PGM=PROG2
+//STEPLIB DD DSN=USERID.ACPT.LOADLIB,DISP=SHR                               
+//        DD DSN=USERID.TEST.LOADLIB,DISP=SHR                               
+//FILE2   DD DSN=USERID.TEST.FILE2,DISP=SHR
+//*
+//STEP3   EXEC PGM=PROG3
+//FILE3   DD DSN=USERID.TEST.FILE3,DISP=SHR
+================================================
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),  
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID      
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)    
+//*                                               
+//JSTEP010 EXEC PROC=PARMORD,TIME.PSTEP010=(0,10),
+//         REGION.PSTEP010=                       
+//*                                               
++++++++++++++
+//PARMORD  PROC                                  
+//*                                              
+//PSTEP010 EXEC PGM=IEBGENER,REGION=6K,TIME=(1,1)
+//SYSUT1   DD DSN=USERID.TEST.FILE1,DISP=OLD    
+//         DD DSN=USERID.TEST.FILE2,DISP=OLD    
+//         DD DSN=USERID.TEST.FILE3,DISP=OLD    
+//SYSUT2   DD DSN=USERID.TEST.FILEOUT,DISP=OLD  
+//SYSPRINT DD SYSOUT=*                           
+//SYSIN    DD DUMMY                              
+//         PEND                                  
+=================================================================
+//USERIDP JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),               
+//         MSGCLASS=X,CLASS=A,NOTIFY=USERID                   
+//PROCLIB  JCLLIB ORDER=(USERID.TEST.PROCLIB)                 
+//*                                                            
+//JSTEP010 EXEC PROC=PARMORD,
+//         TIME.PSTEP010=(0,10),REGION.PSTEP010=,
+//         TIME.PSTEP020=2,REGION.PSTEP020=44K
+//*
+++++++++++++
+//PARMORD  PROC                                  
+//*                                              
+//PSTEP010 EXEC PGM=IEBGENER,REGION=666K,TIME=(1,1)
+//SYSUT1   DD DSN=USERID.TEST.FILE1,DISP=OLD    
+//         DD DSN=USERID.TEST.FILE2,DISP=OLD    
+//SYSUT2   DD DSN=USERID.TEST.FILEOUT,DISP=OLD  
+//SYSPRINT DD SYSOUT=*                           
+//SYSIN    DD DUMMY                              
+//*                                              
+//PSTEP020 EXEC PGM=IEBGENER,REGION=5M,TIME=(,22)
+//SYSUT1   DD DSN=USERID.TEST.FILE3,DISP=OLD    
+//         DD DSN=USERID.TEST.FILE4,DISP=OLD    
+//SYSUT2   DD DSN=USERID.TEST.FILEOUT,DISP=MOD  
+//SYSPRINT DD SYSOUT=*                           
+//SYSIN    DD DUMMY                              
+//         PEND 
+========================================================
+JCL using COND Codes to control Execution of subsequent Steps
+//USERIDC JOB ABCD,'CAP GEMINI',MSGLEVEL=(1,1),           
+//         MSGCLASS=X,CLASS=A,NOTIFY=&SYSUID               
+//*                                                        
+//STEP010  EXEC PGM=IEFBR14                                
+//FILE1    DD DSN=USERID.TEST.SORTOUT,                    
+//            DISP=(MOD,DELETE,DELETE),                    
+//            SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//STEP020  EXEC PGM=SORT,COND=(0,NE)                       
+//SORTIN   DD DSN=USERID.TEST.SORTIN1,DISP=SHR            
+//SORTOUT  DD DSN=&&TEMP1,DISP=(NEW,PASS),SPACE=(TRK,(1,1),RLSE),                      
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)
+//SYSOUT   DD SYSOUT=*                                     
+//SYSIN    DD *                                            
+  SORT FIELDS=(1,5,CH,A)                                   
+//STEP030  EXEC PGM=SORT,COND=(0,NE)                         
+//SORTIN   DD DSN=USERID.TEST.SORTIN2,DISP=SHR              
+//SORTOUT  DD DSN=&&TEMP2,DISP=(NEW,PASS),SPACE=(TRK,(1,1),RLSE),                        
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)  
+//SYSOUT   DD SYSOUT=*                                       
+//SYSIN    DD *                                              
+  SORT FIELDS=(1,5,CH,X)                                     
+//STEP040  EXEC PGM=SORT,COND=((0,NE,STEP020),(0,NE,STEP030))|COND=(0,NE)
+//SORTIN01 DD DSN=&&TEMP1,DISP=OLD                           
+//SORTIN02 DD DSN=&&TEMP2,DISP=OLD                           
+//SORTOUT  DD DSN=USERID.TEST.SORTOUT,DISP=(NEW,CATLG,DELETE),                       
+//            SPACE=(TRK,(1,1),RLSE),                        
+//            DCB=(LRECL=50,BLKSIZE=5000,RECFM=FB,DSORG=PS)  
+//SYSOUT   DD SYSOUT=*                                       
+//SYSIN    DD *          
+  MERGE FIELDS=(1,5,CH,D)
+/*                                                                 
